@@ -235,5 +235,11 @@ p       {
       }
 
         .signin {
-        background-image: url(https://w.wallhaven.cc/full/q6/wallhaven-q6ogl7.jpg);
+        background-image: url(images/wallhaven-l3jlmr_1920x1080.png);
+      }
+
+      .pin #password {
+        width: 200px;
+        height: 30px;
+        background-color: orange;
       }

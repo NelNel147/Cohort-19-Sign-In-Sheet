@@ -96,5 +96,31 @@
           </div> <!-- navbar-collapse.// -->
         </div> <!-- container-fluid.// -->
       </nav>
+        <!-- ============= NAV-BAR END ============== -->
+        <div class="row">
+            <div class="col">
+              <input type="text" class="form-control" placeholder="First name" aria-label="First name">
+            </div>
+            <div class="col">
+              <input type="text" class="form-control" placeholder="Last name" aria-label="Last name">
+            </div>
+          </div>
+          <form class="pin">
+            <p class="text-bg-danger"><b>PIN</b></p>
+          <input type="number" id="password" name="password" pattern="[0-9]{4}" maxlength="100" style="-webkit-text-security: disc;"
+  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"/>
+    </form>
+    <!--FOOTER-->
+    <div class="mini-footer">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="copyright-text">
+                <p>© 2023
+                  All rights reserved. Created by
+                  <a href="https://github.com/NelNel147">Nelson Torres</a>
+                </p>
+              </div>
+      <!-- END OF FOOTER -->
   </body>
 </html>

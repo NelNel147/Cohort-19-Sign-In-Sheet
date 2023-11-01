@@ -1,0 +1,33 @@
+body {
+        background-color: whitesmoke;
+        background-image: url(brickwall.jpg);
+      }
+h1    {
+        color: black;
+        font-family: Impact;
+        font-style: italic;
+        font-weight: lighter;
+        font-style: oblique;
+        text-align: center;
+        font-size: 6rem;
+        margin-top: 30vh;
+
+}
+#background-video {
+        width: 100vw;
+        height: 100vh;
+        object-fit:cover;
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        z-index: -1;
+}
+p       {
+        font-family: arial;
+        color: whitesmoke;
+        text-align: center;
+        font-size: 1rem;
+        margin-top: 30vh;
+}

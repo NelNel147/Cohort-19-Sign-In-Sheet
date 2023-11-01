@@ -233,3 +233,7 @@ p       {
       .floating-icon svg {
         fill: var(--text-active);
       }
+
+        .signin {
+        background-image: url(https://w.wallhaven.cc/full/q6/wallhaven-q6ogl7.jpg);
+      }

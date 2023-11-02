@@ -13,206 +13,9 @@
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans"/>
     <link rel="icon" type="image/x-icon" href="favicon.io.png" />
     <link rel="stylesheet" href="styles.css" />
-    <script>
-        class PinCode {
-constructor(element) {
-  this._element = element;
-  this._digits = Array.from(element.querySelectorAll('.digit'));
-  this._jumper = element.querySelector('.digit-jumper');
-  this._input = element.querySelector('.pin-code-input');
-  this._form = element.parentElement;
-  this._submit = element.querySelector('.pin-code-submit');
-  this._currentDigitIndex = 0;
-  this._canInput = true;
-  this._code = '';
-  
-  this._bindEventHandlers();
-}
-
-_bindEventHandlers() {
-  this._input.addEventListener('focus', () => {
-    if (this._currentDigitIndex === 0) {
-      this._moveJumper(this._currentDigitIndex);
-    }
-  });
-  
-  this._input.addEventListener('input', (e) => {
-    this._input.value = '';
-    
-    if (this._canInput && (!isNaN(parseFloat(e.data)) && isFinite(e.data))) {
-      let digit = this._digits[this._currentDigitIndex - 1];
-      digit.querySelector('span').innerHTML = e.data;
-      digit.classList.add('filled');
-      
-      this._code += e.data;
-
-      if (this._currentDigitIndex < this._digits.length) {
-        this._moveJumper(this._currentDigitIndex);     
-      } else {
-        this._endInput();
-      }
-    }
-  });
-  
-  this._form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    this._reset();
-    
-    //alert(`Your code is: ${this._code}`);
-  });
-}
-
-_getDistanceToDigit(digit, digitWidth) {
-  let distance = this._getTotalOffsetOfDigit(digit, digitWidth);
-  
-  if (this._currentDigitIndex > 0) {
-      distance = digit.offsetLeft - this._digits[this._currentDigitIndex - 1].offsetLeft;
-  }
-  
-  return distance;
-}
-
-_getTotalOffsetOfDigit(digit, digitWidth) {
-  return digit.offsetLeft + digit.clientWidth / 2 - digitWidth / 2;  
-}
-
-_moveJumper(index) {
-  this._canInput = false;
-  
-  let digit = this._digits[index],
-      timeline = new TimelineMax({
-        onStart: () => {
-          this._jumper.classList.remove('blinking');
-        },
-        onComplete: () => {
-          this._jumper.classList.add('blinking');
-          this._currentDigitIndex += 1;
-          this._canInput = true;
-        }
-      }),
-      digitWidth = parseInt(window.getComputedStyle(digit, ':before').width),
-      distance = this._getDistanceToDigit(digit, digitWidth),
-      offset = this._getTotalOffsetOfDigit(digit, digitWidth),
-      scaleX = distance / digitWidth + 1;
-  
-  if (index === 0) {
-    scaleX += 1;
-  }
-  
-  timeline.add(
-    TweenMax.to(this._jumper, .3, {
-      scaleX: scaleX,
-      ease: Expo.easeInOut
-    })
-  );
-  
-  timeline.add(
-    TweenMax.to(this._jumper, .3, {
-      scaleX: 1,
-      x: offset,
-      ease: Expo.easeInOut
-    }),
-    .3
-  );
-}
-
-_endInput() {
-  this._canInput = false;
-  
-  let timeline = new TimelineMax({
-        onStart: () => {
-          this._jumper.classList.remove('blinking');  
-        },
-        onComplete: () => {
-          this._submit.classList.add('visible');
-        }
-      }),
-      digit = this._digits[this._currentDigitIndex - 1],
-      distance = this._element.clientWidth - digit.offsetLeft;
-  
-  timeline.add(
-    TweenMax.to(this._jumper, .3, {
-      scaleX: distance,
-      ease: Expo.easeInOut
-    })
-  );
-  
-  timeline.add(
-    TweenMax.to(this._jumper, .3, {
-      scaleX: 1,
-      ease: Expo.easeInOut
-    }),
-    .3
-  );
-  
-  timeline.add(
-    TweenMax.to(this._jumper, .3, {
-      x: this._element.clientWidth,
-      ease: Expo.easeInOut
-    }),
-    .3
-  );
-}
-
-_reset() {
-  let timeline = new TimelineMax({
-    onStart: () => {
-      this._code = '';
-      this._currentDigitIndex = 0;
-    },
-    onComplete: () => {
-      this._canInput = true;
-      this._element.classList.remove('reset');
-      
-      TweenMax.set(this._jumper, {
-        clearProps: 'transform'
-      });
-    }
-  });
-  
-  timeline.add(
-    () => {
-      this._element.classList.add('reset');
-    }
-  );
-  
-  timeline.add(
-    () => {
-      this._submit.classList.remove('visible');
-    },
-    .2
-  );
-   
-  timeline.add(
-    TweenMax.to(this._jumper, .3, {
-      scaleX: this._element.clientWidth / 6 + 1,
-      ease: Expo.easeInOut,
-      onComplete: () => {
-        this._digits.forEach((digit) => {
-          digit.querySelector('span').innerHTML = '';
-          digit.classList.remove('filled');
-        });
-      }
-    }),
-    .3
-  );
-
-  timeline.add(
-    TweenMax.to(this._jumper, .3, {
-      x: '-100%',
-      scaleX: 1,
-      ease: Expo.easeInOut
-    }),
-    .6
-  );
-}
-}
-
-document.querySelectorAll('.pin-code').forEach((pinCode) => {
-new PinCode(pinCode);
-});
-    </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css?family=Nova+Flat&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"/>
     </head>
     <style type="text/css">
         .autohide {
@@ -233,6 +36,79 @@ new PinCode(pinCode);
           transform: translateY(0);
           transition: all 0.3s ease-in-out;
         }
+
+        *{
+  margin: 0;
+  padding:0;
+  box-sizing: border-box;
+  font-family: 'nova flat'
+}
+body{
+  background: #222734 !important;
+  padding-top: 20px;
+}
+.form-container{
+  min-height: 100vh !important;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+h1.title{
+  color: #ddd;
+  text-align: center;
+  position: relative;
+}
+h1.title::after, h1.title::before{
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 70%;
+  height: 4px;
+  background: #0080ff;
+}
+h1.title::before{
+  width: 50%;
+  height: 3px;
+  bottom: -15px;
+}
+form{
+  width: 90%;
+  padding: 20px;
+  box-shadow: 0px 0px 20px #444;
+  margin: 30px auto;
+}
+
+label{
+  color: #ddd;
+}
+input[type="number"]::-webkit-inner-spin-button, 
+input[type="number"]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+a.link{
+  color: #fff;
+  text-decoration: underline
+}
+a.link:hover{
+  color: #0080ff;
+}
+.form-group i{
+  color: #ddd;
+  margin: 2px 5px;
+}
+form label{
+  display: block
+}
+form input.pin{
+  display: inline-block;
+  width: 50px;
+  text-align: center
+}
       </style>
       <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function() {
@@ -258,41 +134,35 @@ new PinCode(pinCode);
           // if
         });
         // DOMContentLoaded  end
+
+        let inpts =document.querySelectorAll('input');
+for(var i=0;i<inpts.length;i++){
+  inpts[i].onfocus = function(){
+    this.parentElement.children[0].children[0].style.color = "#0080ff";
+    gotoNextField(nextElement)
+        nextElement.setFocus();
+    }
+  }
+  inpts[i].onblur = function(){
+    this.parentElement.children[0].children[0].style.color = "#ddd";
+  }
+let pinCode = document.getElementsByClassName('pin');
+let number = 1;
+for(var j=0;j<pinCode.length;j++){
+  pinCode[j].onkeyup = (e)=>{
+    if(e.target.value.length > 1){
+      e.target.value = e.target.value.slice(0,1);
+    }
+  }
+}
+
       </script>
     </head>
-    <body>
-        <!--PIN CODE-->
-        <form>
-            <div class="pin-code">
-              <div class="pin-code-wrap">
-                <input type="text" class="pin-code-input" />
-                <div class="pin-code-digits">
-                  <div class="digit">
-                    <span></span>
-                  </div>
-                  <div class="digit">
-                    <span></span>
-                  </div>
-                  <div class="digit">
-                    <span></span>
-                  </div>
-                  <div class="digit">
-                    <span></span>
-                  </div>
-                </div>
-                <div class="digit-jumper"></div>
-              </div>
-              <button type="submit" class="pin-code-submit">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z"/></svg>
-              </button>
-            </div>
-          </form>
-          <!-- PIN CODE -->
-
+    <body class="test" bg-danger >
         <!-- ============= NAV-BAR ============== -->
       <nav class="autohide navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">YWEB</a>
+          <a class="navbar-brand" href="index.html">YWEB</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_nav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -316,6 +186,43 @@ new PinCode(pinCode);
         </div> <!-- container-fluid.// -->
       </nav>
         <!-- ============= NAV-BAR END ============== -->
+        <!--PIN CODE-->
+        <section class="container">
+            <div class="row">
+              <div class="col-md-12 form-container">
+                <h1 class="title">Sign In</h1>
+                <form>
+                  <div class="form-group">
+                    <label><i class="fas fa-envelope"></i><span>Full Name</span></label>
+                    <input class="form-control" type="full name" name="full name" required="required"/>
+                  </div>
+                  <div class="form-group">
+                    <label><i class="fas fa-key"></i><span>pin code</span></label>
+                    <input class="pin form-control" type="password" name="pin-code-1" required="required"/>
+                    <input class="pin form-control" type="password" name="pin-code-2" required="required"/>
+                    <input class="pin form-control" type="password" name="pin-code-3" required="required"/>
+                    <input class="pin form-control" type="password" name="pin-code-4" required="required"/>
+                  </div>
+                  <div class="form-group">
+                    <input class="form-control btn btn-primary" type="submit" value="sign in"/>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </section>
+          <!--PIN CODE-->
+          <!--FOOTER-->
+    <div class="mini-footer">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="copyright-text">
+                <p>© 2023
+                  All rights reserved. Created by
+                  <a href="https://github.com/NelNel147">Nelson Torres</a>
+                </p>
+              </div>
+      <!-- END OF FOOTER -->
     <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"

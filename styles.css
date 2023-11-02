@@ -243,3 +243,196 @@ p       {
         height: 30px;
         background-color: orange;
       }
+
+      .pin-code {
+        background: #fff;
+        font-family: "Poppins";
+        font-size: 1.875rem;
+        position: relative;
+      }
+      .pin-code .pin-code-wrap {
+        overflow: hidden;
+        display: flex;
+        padding: 2.8rem 3rem;
+        position: relative;
+      }
+      .pin-code .pin-code-input {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        border: 0;
+        opacity: 0;
+        z-index: 5;
+      }
+      .pin-code .pin-code-digits {
+        display: flex;
+        align-items: center;
+      }
+      .pin-code .pin-code-digits .digit {
+        display: block;
+        position: relative;
+        width: 1em;
+        height: 1em;
+        text-align: center;
+        color: #f25757;
+        font-weight: 700;
+      }
+      .pin-code .pin-code-digits .digit > span {
+        transform: scale(0.8);
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        display: block;
+        transition-delay: 0.5s;
+        opacity: 0;
+      }
+      .pin-code .pin-code-digits .digit:before {
+        content: "";
+        width: 0.375rem;
+        height: 1.3em;
+        background: #fde5e5;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+      }
+      .pin-code .pin-code-digits .digit:not(:last-of-type) {
+        margin-right: 5.625rem;
+      }
+      .pin-code .pin-code-digits .digit.filled:before {
+        display: none;
+      }
+      .pin-code .pin-code-digits .digit.filled > span {
+        transform: scale(1);
+        opacity: 1;
+      }
+      .pin-code .pin-code-digits:after {
+        content: "";
+        clear: both;
+        display: table;
+      }
+      .pin-code .digit-jumper {
+        background: #f25757;
+        height: 1.3em;
+        width: 0.375rem;
+        position: absolute;
+        margin: auto;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        transform-origin: left center;
+        transform: translateX(-100%);
+      }
+      .pin-code .digit-jumper.blinking {
+        -webkit-animation: blinking 0.95s infinite ease;
+                animation: blinking 0.95s infinite ease;
+      }
+      .pin-code .pin-code-submit {
+        left: 100%;
+        transform-origin: left center;
+        color: #fff;
+        position: absolute;
+        border: 0;
+        height: 100%;
+        top: 0;
+        width: 7.5rem;
+        padding: 0;
+        transition: all 0.3s ease;
+        transform: scaleX(0);
+        cursor: pointer;
+        background: #f25757;
+        display: flex;
+        align-items: center;
+      }
+      .pin-code .pin-code-submit svg {
+        width: 2.5rem;
+        margin: 0 auto;
+        opacity: 0;
+        transform: translateX(-1rem);
+        transition: all 0.3s 0.3s cubic-bezier(0.31, 0.68, 0.13, 1.69);
+      }
+      .pin-code .pin-code-submit svg path {
+        fill: #fff;
+      }
+      .pin-code .pin-code-submit.visible {
+        transform: scaleX(1);
+      }
+      .pin-code .pin-code-submit.visible svg {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .pin-code .pin-code-submit:focus {
+        outline: 0;
+      }
+      .pin-code.reset .digit-jumper {
+        transform-origin: right center;
+      }
+      .pin-code.reset .pin-code-submit svg {
+        -webkit-animation: turn 0.3s forwards ease;
+                animation: turn 0.3s forwards ease;
+      }
+      
+      @-webkit-keyframes blinking {
+        0%, 100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+      
+      @keyframes blinking {
+        0%, 100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+      @-webkit-keyframes turn {
+        50% {
+          transform: rotate(-180deg);
+        }
+        100% {
+          opacity: 0;
+          transform: rotate(-180deg) translateX(1rem);
+        }
+      }
+      @keyframes turn {
+        50% {
+          transform: rotate(-180deg);
+        }
+        100% {
+          opacity: 0;
+          transform: rotate(-180deg) translateX(1rem);
+        }
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        min-height: 100vh;
+        background: #fde5e5;
+      }
+      body .social-media {
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        opacity: 0.85;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        font-size: 1.25rem;
+      }
+      body .social-media a {
+        display: inline-block;
+        color: #1a1a1a;
+      }
+      body .social-media a:not(:last-of-type) {
+        margin-right: 0.5rem;
+      }
+      body .social-media:hover {
+        opacity: 1;
+      }

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>YWEB Cohort-19</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans"/>
+    <link rel="icon" type="image/x-icon" href="favicon.io.png" />
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+        class PinCode {
+constructor(element) {
+  this._element = element;
+  this._digits = Array.from(element.querySelectorAll('.digit'));
+  this._jumper = element.querySelector('.digit-jumper');
+  this._input = element.querySelector('.pin-code-input');
+  this._form = element.parentElement;
+  this._submit = element.querySelector('.pin-code-submit');
+  this._currentDigitIndex = 0;
+  this._canInput = true;
+  this._code = '';
+  
+  this._bindEventHandlers();
+}
+
+_bindEventHandlers() {
+  this._input.addEventListener('focus', () => {
+    if (this._currentDigitIndex === 0) {
+      this._moveJumper(this._currentDigitIndex);
+    }
+  });
+  
+  this._input.addEventListener('input', (e) => {
+    this._input.value = '';
+    
+    if (this._canInput && (!isNaN(parseFloat(e.data)) && isFinite(e.data))) {
+      let digit = this._digits[this._currentDigitIndex - 1];
+      digit.querySelector('span').innerHTML = e.data;
+      digit.classList.add('filled');
+      
+      this._code += e.data;
+
+      if (this._currentDigitIndex < this._digits.length) {
+        this._moveJumper(this._currentDigitIndex);     
+      } else {
+        this._endInput();
+      }
+    }
+  });
+  
+  this._form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    this._reset();
+    
+    //alert(`Your code is: ${this._code}`);
+  });
+}
+
+_getDistanceToDigit(digit, digitWidth) {
+  let distance = this._getTotalOffsetOfDigit(digit, digitWidth);
+  
+  if (this._currentDigitIndex > 0) {
+      distance = digit.offsetLeft - this._digits[this._currentDigitIndex - 1].offsetLeft;
+  }
+  
+  return distance;
+}
+
+_getTotalOffsetOfDigit(digit, digitWidth) {
+  return digit.offsetLeft + digit.clientWidth / 2 - digitWidth / 2;  
+}
+
+_moveJumper(index) {
+  this._canInput = false;
+  
+  let digit = this._digits[index],
+      timeline = new TimelineMax({
+        onStart: () => {
+          this._jumper.classList.remove('blinking');
+        },
+        onComplete: () => {
+          this._jumper.classList.add('blinking');
+          this._currentDigitIndex += 1;
+          this._canInput = true;
+        }
+      }),
+      digitWidth = parseInt(window.getComputedStyle(digit, ':before').width),
+      distance = this._getDistanceToDigit(digit, digitWidth),
+      offset = this._getTotalOffsetOfDigit(digit, digitWidth),
+      scaleX = distance / digitWidth + 1;
+  
+  if (index === 0) {
+    scaleX += 1;
+  }
+  
+  timeline.add(
+    TweenMax.to(this._jumper, .3, {
+      scaleX: scaleX,
+      ease: Expo.easeInOut
+    })
+  );
+  
+  timeline.add(
+    TweenMax.to(this._jumper, .3, {
+      scaleX: 1,
+      x: offset,
+      ease: Expo.easeInOut
+    }),
+    .3
+  );
+}
+
+_endInput() {
+  this._canInput = false;
+  
+  let timeline = new TimelineMax({
+        onStart: () => {
+          this._jumper.classList.remove('blinking');  
+        },
+        onComplete: () => {
+          this._submit.classList.add('visible');
+        }
+      }),
+      digit = this._digits[this._currentDigitIndex - 1],
+      distance = this._element.clientWidth - digit.offsetLeft;
+  
+  timeline.add(
+    TweenMax.to(this._jumper, .3, {
+      scaleX: distance,
+      ease: Expo.easeInOut
+    })
+  );
+  
+  timeline.add(
+    TweenMax.to(this._jumper, .3, {
+      scaleX: 1,
+      ease: Expo.easeInOut
+    }),
+    .3
+  );
+  
+  timeline.add(
+    TweenMax.to(this._jumper, .3, {
+      x: this._element.clientWidth,
+      ease: Expo.easeInOut
+    }),
+    .3
+  );
+}
+
+_reset() {
+  let timeline = new TimelineMax({
+    onStart: () => {
+      this._code = '';
+      this._currentDigitIndex = 0;
+    },
+    onComplete: () => {
+      this._canInput = true;
+      this._element.classList.remove('reset');
+      
+      TweenMax.set(this._jumper, {
+        clearProps: 'transform'
+      });
+    }
+  });
+  
+  timeline.add(
+    () => {
+      this._element.classList.add('reset');
+    }
+  );
+  
+  timeline.add(
+    () => {
+      this._submit.classList.remove('visible');
+    },
+    .2
+  );
+   
+  timeline.add(
+    TweenMax.to(this._jumper, .3, {
+      scaleX: this._element.clientWidth / 6 + 1,
+      ease: Expo.easeInOut,
+      onComplete: () => {
+        this._digits.forEach((digit) => {
+          digit.querySelector('span').innerHTML = '';
+          digit.classList.remove('filled');
+        });
+      }
+    }),
+    .3
+  );
+
+  timeline.add(
+    TweenMax.to(this._jumper, .3, {
+      x: '-100%',
+      scaleX: 1,
+      ease: Expo.easeInOut
+    }),
+    .6
+  );
+}
+}
+
+document.querySelectorAll('.pin-code').forEach((pinCode) => {
+new PinCode(pinCode);
+});
+    </script>
+    </head>
+    <style type="text/css">
+        .autohide {
+          position: fixed;
+          top: 0;
+          right: 0;
+          left: 0;
+          width: 100%;
+          z-index: 1030;
+        }
+    
+        .scrolled-down {
+          transform: translateY(-100%);
+          transition: all 0.3s ease-in-out;
+        }
+    
+        .scrolled-up {
+          transform: translateY(0);
+          transition: all 0.3s ease-in-out;
+        }
+      </style>
+      <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+          el_autohide = document.querySelector('.autohide');
+          // add padding-top to bady (if necessary)
+          navbar_height = document.querySelector('.navbar').offsetHeight;
+          document.body.style.paddingTop = navbar_height + 'px';
+          if (el_autohide) {
+            var last_scroll_top = 0;
+            window.addEventListener('scroll', function() {
+              let scroll_top = window.scrollY;
+              if (scroll_top < last_scroll_top) {
+                el_autohide.classList.remove('scrolled-down');
+                el_autohide.classList.add('scrolled-up');
+              } else {
+                el_autohide.classList.remove('scrolled-up');
+                el_autohide.classList.add('scrolled-down');
+              }
+              last_scroll_top = scroll_top;
+            });
+            // window.addEventListener
+          }
+          // if
+        });
+        // DOMContentLoaded  end
+      </script>
+    </head>
+    <body>
+        <!--PIN CODE-->
+        <form>
+            <div class="pin-code">
+              <div class="pin-code-wrap">
+                <input type="text" class="pin-code-input" />
+                <div class="pin-code-digits">
+                  <div class="digit">
+                    <span></span>
+                  </div>
+                  <div class="digit">
+                    <span></span>
+                  </div>
+                  <div class="digit">
+                    <span></span>
+                  </div>
+                  <div class="digit">
+                    <span></span>
+                  </div>
+                </div>
+                <div class="digit-jumper"></div>
+              </div>
+              <button type="submit" class="pin-code-submit">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z"/></svg>
+              </button>
+            </div>
+          </form>
+          <!-- PIN CODE -->
+
+        <!-- ============= NAV-BAR ============== -->
+      <nav class="autohide navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">YWEB</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_nav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="main_nav">
+    
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item"><a class="nav-link" href="index.html"> Home </a></li>
+              <li class="nav-item"><a class="nav-link" href="sign-in.html"> Sign In Sheet </a></li>
+              <li class="nav-item"><a class="nav-link" href="resources.html"> Resources </a></li>
+              <li class="nav-item"><a class="nav-link" href="test.html"> Test Page </a></li>
+              <li class="nav-item dropdown">
+                <a class="nav-link  dropdown-toggle" href="#" data-bs-toggle="dropdown"> Dropdown right </a>
+                <ul class="dropdown-menu dropdown-menu-right">
+                  <li><a class="dropdown-item" href="#"> Submenu item 1</a></li>
+                  <li><a class="dropdown-item" href="#"> Submenu item 2 </a></li>
+                </ul>
+              </li>
+            </ul>
+    
+          </div> <!-- navbar-collapse.// -->
+        </div> <!-- container-fluid.// -->
+      </nav>
+        <!-- ============= NAV-BAR END ============== -->
+    <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"
+  ></script>
+    </body>
+    </html>

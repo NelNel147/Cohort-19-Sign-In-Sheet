@@ -155,6 +155,11 @@ for(var j=0;j<pinCode.length;j++){
   }
 }
 
+        $("input").keyup(function () {
+    if (this.value.length == this.maxlength) {
+      $(this).next('input').focus();
+    }
+});
       </script>
       <!--END OF JAVASCRIPT-->
     </head>
@@ -198,10 +203,10 @@ for(var j=0;j<pinCode.length;j++){
                   </div>
                   <div class="form-group">
                     <label><i class="fas fa-key"></i><span>pin code</span></label>
-                    <input class="pin form-control" type="password" name="pin-code-1" required="required"/>
-                    <input class="pin form-control" type="password" name="pin-code-2" required="required"/>
-                    <input class="pin form-control" type="password" name="pin-code-3" required="required"/>
-                    <input class="pin form-control" type="password" name="pin-code-4" required="required"/>
+                    <input class="pin form-control" type="password" name="pin-code-1" required="required" maxlength="1"/>
+                    <input class="pin form-control" type="password" name="pin-code-2" required="required" maxlength="1"/>
+                    <input class="pin form-control" type="password" name="pin-code-3" required="required" maxlength="1"/>
+                    <input class="pin form-control" type="password" name="pin-code-4" required="required" maxlength="1"/>
                   </div>
                   <div class="form-group">
                     <input class="form-control btn btn-warning" type="submit" value="sign in"/>

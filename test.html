@@ -11,6 +11,8 @@
       crossorigin="anonymous"/>
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans"/>
     <link rel="stylesheet" href="styles.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="test.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
     <link href="https://fonts.googleapis.com/css?family=Nova+Flat&amp;display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"/>
@@ -108,61 +110,6 @@ form input.pin{
   text-align: center
 }
       </style>
-      <!--JAVASCRIPT-->
-      <script type="text/javascript">
-        document.addEventListener("DOMContentLoaded", function() {
-          el_autohide = document.querySelector('.autohide');
-          // add padding-top to bady (if necessary)
-          navbar_height = document.querySelector('.navbar').offsetHeight;
-          document.body.style.paddingTop = navbar_height + 'px';
-          if (el_autohide) {
-            var last_scroll_top = 0;
-            window.addEventListener('scroll', function() {
-              let scroll_top = window.scrollY;
-              if (scroll_top < last_scroll_top) {
-                el_autohide.classList.remove('scrolled-down');
-                el_autohide.classList.add('scrolled-up');
-              } else {
-                el_autohide.classList.remove('scrolled-up');
-                el_autohide.classList.add('scrolled-down');
-              }
-              last_scroll_top = scroll_top;
-            });
-            // window.addEventListener
-          }
-          // if
-        });
-        // DOMContentLoaded  end
-
-        let inpts =document.querySelectorAll('input');
-for(var i=0;i<inpts.length;i++){
-  inpts[i].onfocus = function(){
-    this.parentElement.children[0].children[0].style.color = "#0080ff";
-    gotoNextField(nextElement)
-        nextElement.setFocus();
-    }
-  }
-  inpts[i].onblur = function(){
-    this.parentElement.children[0].children[0].style.color = "#ddd";
-  }
-let pinCode = document.getElementsByClassName('pin');
-let number = 1;
-for(var j=0;j<pinCode.length;j++){
-  pinCode[j].onkeyup = (e)=>{
-    if(e.target.value.length > 1){
-      e.target.value = e.target.value.slice(0,1);
-    }
-  }
-}
-      </script>
-      <script>
-        $("input").keyup(function () {
-    if (this.value.length == this.maxlength) {
-      $(this).next('input').focus();
-    }
-});
-      </script>
-      <!--END OF JAVASCRIPT-->
     </head>
     <body class="test" bg-danger >
         <!-- ============= NAV-BAR ============== -->
